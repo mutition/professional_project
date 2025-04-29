@@ -15,9 +15,9 @@ class Movie(models.Model):
     language = models.CharField(max_length=100,default='')
     durations = models.TextField(default='')
     pubdate = models.CharField(max_length=1000, default='')
-    rating = models.FloatField()
+    rating = models.FloatField(null=True)
     summary = models.TextField(default='')
-    like_count = models.IntegerField()
+    like_count = models.IntegerField(null=True)
 
     # 添加一个显示名称的方法
     def __str__(self):

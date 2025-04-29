@@ -55,7 +55,7 @@ class MovieCommentViewSet(GenericViewSet):
     def list(self, request, *args, **kwargs):
         movie_id=request.query_params.get('movie_id')
         movie=Movie.objects.get(id=movie_id)
-        comments = Comment.objects.filter(movie=movie)
+        comments = Comment.objects.filter(movie=movie,visible=True)
         comment_list = []
         for comment in comments:
             comment_list.append({
@@ -63,6 +63,7 @@ class MovieCommentViewSet(GenericViewSet):
                 "comment_content": comment.content,
                 "comment_likes": comment.likes,
                 "comment_updated_time": comment.updated_time,
+                "user_name" : comment.user.username,
             })
         return Response({"comment_list": comment_list})
 
