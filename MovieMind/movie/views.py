@@ -8,6 +8,8 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from interact.models import Like, Collect, Rate, Comment
 from .models import Movie
 
+
+
 class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
