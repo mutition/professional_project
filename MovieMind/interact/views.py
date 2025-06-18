@@ -222,6 +222,21 @@ class CommentViewSet(GenericViewSet, mixins.UpdateModelMixin):
             })
         return self.get_paginated_response(data)
 
+    @action(detail=False, methods=['get'], url_path='top_comment')
+    def top_movie(self, request):
+        comments = Comment.objects.order_by('-likes')[:10]
+        comment_list = []
+        for comment in comments:
+            comment_list.append({
+                "comment_id": comment.id,
+                "comment_content": comment.content,
+                "comment_likes": comment.likes,
+                "comment_updated_time": comment.updated_time,
+                "user_name" : comment.user.username,
+                "user_avatar" : comment.user.avatar,
+            })
+        return Response({"comment_list": comment_list})
+
     def update(self, request, pk=None, *args, **kwargs):
         user = request.user
         try:
