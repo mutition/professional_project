@@ -10,6 +10,7 @@ class User(AbstractUser):
     age = models.IntegerField(blank=True, null=True)
     introduce = models.TextField(blank=True, null=True)
     tag = models.JSONField(blank=True, null=True)
+    avatar = models.URLField(max_length=500, blank=True, null=True)
 
 
 
