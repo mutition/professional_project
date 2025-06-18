@@ -1,5 +1,6 @@
 
 from rest_framework import serializers
+from rest_framework.decorators import action
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -68,6 +69,9 @@ class MovieCommentViewSet(GenericViewSet):
             })
         return Response({"comment_list": comment_list})
 
+
+
+
 class MovieRecommendViewSet(GenericViewSet):
     queryset = Movie.objects.all()
     pagination_class = LimitOffsetPagination
@@ -88,6 +92,12 @@ class MovieRecommendViewSet(GenericViewSet):
 
         # 不分页
         serializer = MovieSerializer(unique_movies, many=True)
+        return Response(serializer.data)
+
+    @action(detail=False, methods=['get'], url_path='top_movie')
+    def top_movie(self, request):
+        top_movies = Movie.objects.order_by('like_count')[:100]
+        serializer = MovieSerializer(top_movies, many=True)
         return Response(serializer.data)
 
 
