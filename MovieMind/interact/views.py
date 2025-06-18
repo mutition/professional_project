@@ -7,7 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status, mixins
 from rest_framework.viewsets import GenericViewSet
 
-from interact.models import Like, Comment, Collect, SeenHistory, Rate
+from interact.models import Like, Comment, Collect, SeenHistory, Rate, Follow
 from movie.models import Movie
 
 User = get_user_model()
@@ -309,3 +309,34 @@ class RateViewSet(GenericViewSet, mixins.UpdateModelMixin):
         rate.save()
         return Response({'message': '评分更新成功', 'rate_id': rate.id, 'rate': rate.rate},
                         status=status.HTTP_200_OK)
+
+class FollowViewSet(GenericViewSet, mixins.UpdateModelMixin):
+    queryset = Follow.objects.all()
+    pagination_class = LimitOffsetPagination
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        user = self.request.user
+        return Follow.objects.filter(follower=user)
+
+    def create(self, request, *args, **kwargs):
+        follower = request.user
+        followed_id = request.data.get('followed_id')
+        if not followed_id:
+            return Response({'error': '请提供movie_id'}, status=status.HTTP_400_BAD_REQUEST)
+        followed_user=User.objects.get(id=followed_id)
+        comment_obj = Follow.objects.create(follower=follower, followed=followed_user,)
+
+        return Response({comment_obj.id}, status=status.HTTP_201_CREATED)
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset().select_related('followed')
+        page = self.paginate_queryset(queryset)
+        data = []
+        for followed in page:
+            followed_user = followed.followed
+            data.append({
+                'followed_id': followed_user.id,
+                'followed_name' : followed_user.username,
+            })
+        return self.get_paginated_response(data)
+

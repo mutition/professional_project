@@ -11,7 +11,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # 执行删除操作
         new_movie_list = []
+        print(111)
         for old_movie in CollectMovieDB.objects.all():
+            print(222)
             pattern = r"'average':\s*([\d.]+)"
             rating_match = re.search(pattern, old_movie.rating)
 
@@ -29,6 +31,8 @@ class Command(BaseCommand):
             direct_pattern = r"'name':\s*'([^']*)'"
             match = re.search(direct_pattern, old_movie.directors)
             name = match.group(1) if match else None
+            if not name:
+                continue
 
             act_pattern = r"'name':\s*'([^']*)'"
             # 使用正则表达式查找所有匹配项

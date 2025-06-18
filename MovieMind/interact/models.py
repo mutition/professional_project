@@ -32,3 +32,7 @@ class SeenHistory(models.Model):
     created_time = models.DateTimeField(auto_now_add=True)
     updated_time = models.DateTimeField(auto_now=True)
 
+class Follow(models.Model):
+    follower = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='following')
+    followed = models.ForeignKey('user.User', on_delete=models.CASCADE, related_name='followers')
+    created_time = models.DateTimeField(auto_now_add=True)
