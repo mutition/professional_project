@@ -53,7 +53,7 @@ class AdminCommentViewSet(viewsets.GenericViewSet):
     @action(detail=True, methods=['get'])
     def visible(self, request, pk=None):
         comment = self.get_object()
-        comment.visible = True
+        comment.visible = False
         comment.save()
         return Response({"status": "success", "visible": comment.visible})
 
