@@ -47,6 +47,7 @@ class AdminCommentViewSet(viewsets.GenericViewSet):
                 'movie_id': movie.id,
                 'movie_name': movie.name,
                 'user_name': user.username,
+                'content': comment.content,
             })
         return self.get_paginated_response(data)
 
