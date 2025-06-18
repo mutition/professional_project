@@ -6,8 +6,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from interact.models import Like, Collect, Rate, Comment
-from .models import Movie
-
+from .models import Movie, MovieTag
 
 
 class MovieSerializer(serializers.ModelSerializer):
@@ -68,5 +67,29 @@ class MovieCommentViewSet(GenericViewSet):
                 "user_name" : comment.user.username,
             })
         return Response({"comment_list": comment_list})
+
+class MovieRecommendViewSet(GenericViewSet):
+    queryset = Movie.objects.all()
+    pagination_class = LimitOffsetPagination
+    permission_classes = [IsAuthenticated]
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        movie_list = []
+
+        # 根据用户 tag 随机获取对应 Movie
+        for tag in user.tag:
+            tag_movies = MovieTag.objects.filter(tag=tag).order_by('?')[:2]
+            for movie_tag in tag_movies:
+                movie_list.append(movie_tag.movie)
+
+        # 去重
+        unique_movies = list(set(movie_list))
+
+        # 不分页
+        serializer = MovieSerializer(unique_movies, many=True)
+        return Response(serializer.data)
+
+
 
 

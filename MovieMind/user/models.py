@@ -9,5 +9,8 @@ class User(AbstractUser):
     gender = models.CharField(max_length=1, blank=True, null=True)
     age = models.IntegerField(blank=True, null=True)
     introduce = models.TextField(blank=True, null=True)
+    tag = models.JSONField(blank=True, null=True)
+
+
 
 
