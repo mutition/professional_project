@@ -96,7 +96,7 @@ class MovieRecommendViewSet(GenericViewSet):
 
     @action(detail=False, methods=['get'], url_path='top_movie')
     def top_movie(self, request):
-        top_movies = Movie.objects.order_by('like_count')[:100]
+        top_movies = Movie.objects.order_by('-like_count')[:100]
         serializer = MovieSerializer(top_movies, many=True)
         return Response(serializer.data)
 
