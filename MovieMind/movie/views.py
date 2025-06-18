@@ -66,6 +66,7 @@ class MovieCommentViewSet(GenericViewSet):
                 "comment_likes": comment.likes,
                 "comment_updated_time": comment.updated_time,
                 "user_name" : comment.user.username,
+                "user_id" : comment.user.id,
                 "user_avatar" : comment.user.avatar,
             })
         return Response({"comment_list": comment_list})
