@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from requests import Response
+from rest_framework.response import Response
 from rest_framework import serializers, mixins
 from rest_framework import viewsets
 from rest_framework.decorators import action
@@ -51,11 +51,11 @@ class AdminCommentViewSet(viewsets.GenericViewSet):
         return self.get_paginated_response(data)
 
     @action(detail=True, methods=['get'])
-    def visible(self,pk=None):
+    def visible(self, request, pk=None):
         comment = self.get_object()
         comment.visible = True
         comment.save()
-        return Response()
+        return Response({"status": "success", "visible": comment.visible})
 
 
 
